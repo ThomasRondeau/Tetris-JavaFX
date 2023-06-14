@@ -8,7 +8,8 @@ public class Piece {
     private final Polygon polygon;
     private int min_x;
     private int max_x;
-    private int[] y;
+    private int[] y_top;
+    private int[] y_bottom;
 
     public Piece() {
         Polygon[] list_polygon = new Polygon[4];
@@ -16,10 +17,9 @@ public class Piece {
         Random random = new Random();
         int randomNumber = random.nextInt(3) + 1;
         polygon = list_polygon[randomNumber];
-        int[] min_max_coordinates = getMinMaxCoordinates();
-        min_x = min_max_coordinates[0];
-        max_x = min_max_coordinates[2];
-        y = new int[max_x - min_x];
+        getMinMaxCoordinates();
+        y_bottom = new int[max_x - min_x];
+        y_top = new int[max_x - min_x];
      }
 
     private void initializePolygons(Polygon[] list_polygon) {
@@ -66,16 +66,14 @@ public class Piece {
         list_polygon[3] = polygon4;
     }
 
-    public int[] getMinMaxCoordinates() {
-        int minX = Integer.MIN_VALUE;
-        int maxX = Integer.MAX_VALUE;
+    public void getMinMaxCoordinates() {
 
         for (int i = 0; i < polygon.getPoints().size(); i += 2) {
             int x = (int) Math.round(polygon.getPoints().get(i));
             int y = (int) Math.round(polygon.getPoints().get(i + 1));
 
-            minX = Math.min(minX, x);
-            maxX = Math.max(maxX, x);
+            min_x = Math.min(min_x, x);
+            max_x= Math.max(max_x, x);
         }
     }
 
@@ -90,8 +88,9 @@ public class Piece {
     }
 
     public void moveDown(int distance){
-        for(x in y){
-
+        for(int i = 0; i < y_bottom.length; i++){
+            y_bottom[i] += distance;
+            y_top[i] += distance;
         }
     }
 
@@ -103,8 +102,12 @@ public class Piece {
         return max_x;
     }
 
-    public int[] getY() {
-        return y;
+    public int[] getY_top() {
+        return y_top;
+    }
+
+    public int[] getY_bottom() {
+        return y_bottom;
     }
 
     public Polygon getPolygon() {

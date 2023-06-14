@@ -37,7 +37,6 @@ public class Main extends Application {
                 switch(event.getCode()) {
 
                     case SPACE:
-                        piece.x
                         controller.rushDown();
                         break;
                     case D:
