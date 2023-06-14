@@ -30,6 +30,11 @@ public class Grille {
     }
 
     public boolean reach_bottom(Piece piece){
-        if(piece.getMax_y() > )
+        for(int i = piece.getMin_x(); i <=  piece.getMax_x(); i += taille_case ){
+            if(piece.getMax_y() > limit_Y[i / taille_case]){
+        }
+
+
+        }
     }
 }
