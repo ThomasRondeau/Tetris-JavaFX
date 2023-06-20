@@ -1,7 +1,7 @@
 package com.example.tetrisjavafx;
 
 public class Controller{
-
+    
     public void rushDown(){
         System.out.println("Le bloc descend tout en bas");
     }
