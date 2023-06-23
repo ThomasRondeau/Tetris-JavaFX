@@ -6,8 +6,8 @@ import java.util.Random;
 
 public class Piece {
     private final Polygon polygon;
-    private int min_x;
-    private int max_x;
+    private int[] left_x;
+    private int[] right_x;
     private int[] y_top;
     private int[] y_bottom;
 
@@ -22,17 +22,47 @@ public class Piece {
 
 
     public void getMinMaxCoordinates() {
-
+        int min_x = 0;
+        int max_x = 0;
+        int min_y = 0;
+        int max_y = 0;
         for (int i = 0; i < polygon.getPoints().size(); i += 2) {
             int x = (int) Math.round(polygon.getPoints().get(i));
             int y = (int) Math.round(polygon.getPoints().get(i + 1));
-
+            min_y = Math.min(min_y, y);
+            max_y= Math.max(max_y, y);
             min_x = Math.min(min_x, x);
             max_x= Math.max(max_x, x);
         }
+        // listes x
+        left_x = new int[max_y - min_y];
+        right_x = new int[max_y - min_y];
+        double iterator = min_y;
+        for(int i = 0; i<y_bottom.length; i++){
+            double tempo1 = 0;
+            double tempo2 = 0;
+            boolean loaded = false;
+            for (int k = 1; k < polygon.getPoints().size() + 1; k += 2) {
+                if(polygon.getPoints().get(k) == iterator & !loaded){
+                    tempo1 = polygon.getPoints().get(k-1);
+                    loaded = true;
+                } else if (polygon.getPoints().get(k) == iterator & loaded) {
+                    tempo2 = polygon.getPoints().get(k-1);
+                }
+            }
+            if(tempo1 < tempo2){
+                left_x[i] = (int) tempo1;
+                right_x[i] = (int) tempo2;
+            }else {
+                left_x[i] = (int) tempo2;
+                right_x[i] = (int) tempo1;
+            }
+            iterator += 50;
+        }
+        // listes y
         y_bottom = new int[max_x - min_x];
         y_top = new int[max_x - min_x];
-        double iterator = min_x;
+        iterator = min_x;
         for(int i = 0; i<y_bottom.length; i++){
             double tempo1 = 0;
             double tempo2 = 0;
@@ -45,7 +75,7 @@ public class Piece {
                     tempo2 = polygon.getPoints().get(k+1);
                 }
             }
-            if(tempo1 < tempo2){
+            if(tempo1 > tempo2){
                 y_bottom[i] = (int) tempo1;
                 y_top[i] = (int) tempo2;
             }else {
@@ -57,13 +87,17 @@ public class Piece {
     }
 
     public void moveRight(int taille_case){
-        min_x += taille_case;
-        max_x += taille_case;
+        for(int i = 0; i < y_bottom.length; i++){
+            left_x[i] += taille_case;
+            right_x[i] += taille_case;
+        }
     }
 
     public void moveLeft(int taille_case){
-        min_x -= taille_case;
-        max_x -= taille_case;
+        for(int i = 0; i < y_bottom.length; i++){
+            left_x[i] -= taille_case;
+            right_x[i] -= taille_case;
+        }
     }
 
     public void moveDown(int distance){
@@ -73,12 +107,24 @@ public class Piece {
         }
     }
 
-    public int getMin_x() {
-        return min_x;
+    public int getminX(){
+        int to_return = 0;
+        for(int k: left_x){
+            if (k < to_return){
+                to_return = k;
+            }
+        }
+        return to_return;
     }
 
-    public int getMax_x() {
-        return max_x;
+    public int getmaxX(){
+        int to_return = 0;
+        for(int k: right_x){
+            if (k > to_return){
+                to_return = k;
+            }
+        }
+        return to_return;
     }
 
     public int[] getY_top() {

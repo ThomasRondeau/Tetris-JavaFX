@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class Grille {
 
-    private int[] limites = new int[4]; // gauche , haut, droite, bas
+    private final int[] limites = new int[4]; // gauche , bas, droite, haut
     private final int taille_case;
     private int[] limit_Y;
 
@@ -18,22 +18,24 @@ public class Grille {
         limites[3] = 0;
     }
 
+    public void setLimit_Y(int[] limit_Y) {
+        this.limit_Y = limit_Y;
+    }
+
     public int getTaille_case() {
         return taille_case;
     }
 
     public boolean check_in_grille_left_right(Piece piece){
-        if(limites[0] > piece.getMin_x() || limites[2] > piece.getMax_x()){
-            return false;
-        }
-        return true;
+        return limites[0] <= piece.getminX() && limites[2] <= piece.getmaxX();
     }
 
     public boolean reach_bottom(Piece piece){
-        for(int i = piece.getMin_x()/taille_case; i <= piece.getMax_x()/taille_case; i++){
-            return limit_Y[i] >= piece.getY_bottom()[i];
-
+        for(int i = piece.getminX()/taille_case; i <= piece.getmaxX()/taille_case; i++){
+            if(limit_Y[i] < piece.getY_bottom()[i]){
+                return false;
+            }
         }
-        return false; // à enlever
+        return true;
     }
 }

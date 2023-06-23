@@ -3,6 +3,7 @@ package com.example.tetrisjavafx;
 import java.io.IOException;
 
 
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -20,43 +21,13 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-
-        Piece piece = new Piece();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("hello-view.fxml"));
+        // initialisation de la grille et des pièces
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("start.fxml"));
         Parent root = loader.load();
-        Controller controller = loader.getController();
-        Group rootGroup = new Group(root, piece.getPolygon());
-        Scene scene = new Scene(rootGroup);
+        Scene scene = new Scene(root);
 
-
-        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-
-            @Override
-            public void handle(KeyEvent event) {
-
-                switch(event.getCode()) {
-
-                    case SPACE:
-                        controller.rushDown();
-                        break;
-                    case D:
-                        controller.moveRight();
-                        break;
-                    case Q:
-                        controller.moveLeft();
-                        break;
-                    case RIGHT:
-                        controller.rotateRight();
-                        break;
-                    case LEFT:
-                        controller.rotateLeft();
-                        break;
-                    default:
-                        break;
-                }
-            }
-        });
-
+        stage.setTitle("Tetris");
+        stage.setResizable(false);
         stage.setScene(scene);
         stage.show();
     }
